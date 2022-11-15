@@ -42,25 +42,37 @@ const getUserLogin = (email) => {
 // serialize: store user id in session
 passport.serializeUser((id, done) => {
   console.log("serialize", id);
+
   // serialize user id by adding it to 'done()' callback
+  done(null, id);
 });
 
 // deserialize: get user id from session and get all user data
 passport.deserializeUser(async (id, done) => {
   // get user data by id from getUser
+  const user = getUser(id);
   console.log("deserialize", user);
   // deserialize user by adding it to 'done()' callback
+  done(null, user);
 });
 
 passport.use(
   new Strategy((username, password, done) => {
     // get user by username from getUserLogin
+    const user = getUserLogin(username);
     // if user is undefined
+    if (user === undefined) {
+      return done(null, false);
+    }
     // return done(null, false);
     // if passwords dont match
+    if (password !== user.password) {
+      return done(null, false);
+    }
     // return done(null, false);
     // if all is ok
     // return done(null, user.user_id);
+    return done(null, user.user_id);
   })
 );
 
