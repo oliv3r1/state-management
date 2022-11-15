@@ -70,8 +70,9 @@ app.post(
 );
 
 app.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect("/");
+  req.logout(() => {
+    res.redirect("/");
+  });
 });
 
 app.get("/setCookie/:clr", (req, res) => {
